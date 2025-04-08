@@ -32,8 +32,6 @@ func Open() {
 		}
 	}
 
-	// Close the reader
-	defer reader.Close()
 	fmt.Println("Exiting CLI...")
 	os.Exit(0)
 }
