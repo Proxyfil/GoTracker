@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"cli"
+	"gotracker/cli"
 )
 
 func main() {
-	go cli.Main()
+	go cli.Open()
+
+	for { }
 }
