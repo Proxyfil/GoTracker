@@ -2,13 +2,50 @@ package db
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"os"
+
 	_ "github.com/lib/pq" // PostgreSQL driver
 )
 
+type Config struct {
+	DBUser     string `json:"db_user"`
+	DBPassword string `json:"db_password"`
+	DBHost     string `json:"db_host"`
+	DBPort     string `json:"db_port"`
+	DBName     string `json:"db_name"`
+}
+
+// LoadConfig reads the configuration from a JSON file
+func LoadConfig() (*Config, error) {
+	file, err := os.Open("../vars/config.json")
+	if err != nil {
+		return nil, fmt.Errorf("failed to open config file: %w", err)
+	}
+	defer file.Close()
+
+	var config Config
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode config file: %w", err)
+	}
+
+	return &config, nil
+}
+
 // ConnectDB establishes a connection to the postgres database
 func ConnectDB() (*sql.DB, error) {
-	db, err := sql.Open("postgres", "user=postgres dbname=postgres sslmode=disable host=localhost port=5432 password=postgres")
+	config, err := LoadConfig()
+	if err != nil {
+		return nil, fmt.Errorf("failed to load config: %w", err)
+	}
+
+	dsn := fmt.Sprintf("user=%s dbname=%s sslmode=disable host=%s port=%s password=%s",
+		config.DBUser, config.DBName, config.DBHost, config.DBPort, config.DBPassword)
+
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
