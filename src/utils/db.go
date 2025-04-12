@@ -202,5 +202,30 @@ func Migrate(db *sql.DB) error {
 		return fmt.Errorf("failed to create day_preset_meal table: %w", err)
 	}
 
+	// Create target table if it doesn't exist
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS target (
+			id SERIAL PRIMARY KEY,
+			user_id INT REFERENCES users(id),
+			date DATE,
+			fat FLOAT,
+			saturated_fat FLOAT,
+			trans_fat FLOAT,
+			cholesterol FLOAT,
+			sodium FLOAT,
+			carbohydrates FLOAT,
+			fiber FLOAT,
+			sugars FLOAT,
+			protein FLOAT,
+			calcium FLOAT,
+			iron FLOAT,
+			potassium FLOAT,
+			calories FLOAT
+		)
+	`)
+	if err != nil {
+		return fmt.Errorf("failed to create target table: %w", err)
+	}
+
 	return nil
 }
