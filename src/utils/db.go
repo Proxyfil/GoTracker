@@ -19,7 +19,7 @@ type Config struct {
 
 // LoadConfig reads the configuration from a JSON file
 func LoadConfig() (*Config, error) {
-	file, err := os.Open("../vars/config.json")
+	file, err := os.Open("./vars/config.json")
 	if err != nil {
 		return nil, fmt.Errorf("failed to open config file: %w", err)
 	}
