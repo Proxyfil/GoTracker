@@ -131,7 +131,7 @@ func Migrate(db *sql.DB) error {
 			calcium FLOAT,
 			iron FLOAT,
 			potassium FLOAT,
-			calories FLOAT,
+			calories FLOAT
 		)
 	`)
 	if err != nil {
