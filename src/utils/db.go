@@ -119,7 +119,19 @@ func Migrate(db *sql.DB) error {
 		CREATE TABLE IF NOT EXISTS food (
 			id SERIAL PRIMARY KEY,
 			name VARCHAR(50),
-			calories FLOAT
+			fat FLOAT,
+			saturated_fat FLOAT,
+			trans_fat FLOAT,
+			cholesterol FLOAT,
+			sodium FLOAT,
+			carbohydrates FLOAT,
+			fiber FLOAT,
+			sugars FLOAT,
+			protein FLOAT,
+			calcium FLOAT,
+			iron FLOAT,
+			potassium FLOAT,
+			calories FLOAT,
 		)
 	`)
 	if err != nil {
