@@ -68,8 +68,6 @@ func Migrate(db *sql.DB) error {
 			age INT,
 			weight INT,
 			height INT,
-			body_fat FLOAT,
-			imc FLOAT,
 			target_weight INT
 		)
 	`)
