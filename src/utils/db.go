@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
 
 	_ "github.com/lib/pq" // PostgreSQL driver
 )
@@ -228,4 +229,56 @@ func Migrate(db *sql.DB) error {
 	}
 
 	return nil
+}
+
+// SearchFood searches for a food item in the database by name
+func SearchFood(db *sql.DB, name string) (map[string]interface{}, error) {
+	query := `SELECT * FROM food WHERE name ILIKE $1`
+	row := db.QueryRow(query, "%"+name+"%")
+
+	var food map[string]interface{}
+	err := row.Scan(&food)
+	if err != nil {
+		return nil, fmt.Errorf("food not found: %w", err)
+	}
+
+	return food, nil
+}
+
+// AddFoodConsumption adds a consumed food item to the food_history table
+func AddFoodConsumption(db *sql.DB, userID int, foodName string, quantity float64, date time.Time) error {
+	query := `
+		INSERT INTO food_history (user_id, food_id, date, quantity)
+		SELECT $1, id, $2, $3 FROM food WHERE name = $4
+	`
+	_, err := db.Exec(query, userID, date, quantity, foodName)
+	if err != nil {
+		return fmt.Errorf("failed to add food consumption: %w", err)
+	}
+
+	return nil
+}
+
+// GenerateDailyReport generates a daily nutrition report for the user
+func GenerateDailyReport(db *sql.DB, userID int, date time.Time) (string, error) {
+	query := `
+        SELECT 
+            COALESCE(SUM(f.carbohydrates * fh.quantity / 100), 0) AS carbs,
+            COALESCE(SUM(f.protein * fh.quantity / 100), 0) AS protein,
+            COALESCE(SUM(f.fat * fh.quantity / 100), 0) AS fat,
+            COALESCE(SUM(f.calories * fh.quantity / 100), 0) AS calories
+        FROM food_history fh
+        JOIN food f ON fh.food_id = f.id
+        WHERE fh.user_id = $1 AND DATE(fh.date) = DATE($2)
+    `
+	row := db.QueryRow(query, userID, date)
+
+	var carbs, protein, fat, calories float64
+	err := row.Scan(&carbs, &protein, &fat, &calories)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate report: %w", err)
+	}
+
+	report := fmt.Sprintf("Carbs: %.2fg, Protein: %.2fg, Fat: %.2fg, Calories: %.2fkcal", carbs, protein, fat, calories)
+	return report, nil
 }
