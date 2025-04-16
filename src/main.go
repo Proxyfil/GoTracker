@@ -57,6 +57,8 @@ func main() {
 				fmt.Println("  - history: View food, weight, IMC or body fat history")
 				fmt.Println("  - delete: Delete food history")
 				fmt.Println("  - update: Update user information")
+				fmt.Println("  - details: Show details about a food")
+				fmt.Println("  - exit: Exit the CLI")
 
 			case "bodyfat":
 				if user.ID == 0 {
