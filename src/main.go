@@ -841,6 +841,34 @@ func main() {
 							fmt.Println("Unknown update type. Please use 'firstname', 'lastname', 'age', 'weight', 'height' or 'target_weight'.")
 					}
 
+				case "details":
+					var detailsArgs = strings.Split(msg.Command, " ")
+					if len(detailsArgs) < 2 {
+						fmt.Println("Please provide a food ID to get details.")
+						fmt.Print("Command: ")
+						continue
+					}
+					foodID := detailsArgs[1]
+
+					// Get food details from api
+					foodDetails, err := fdcnal.GetFoodDetails(foodID)
+					if err != nil {
+						fmt.Println("Error fetching food details:", err)
+						fmt.Print("Command: ")
+						continue
+					}
+					if len(foodDetails) == 0 {
+						fmt.Println("No food details found.")
+						fmt.Print("Command: ")
+						continue
+					}
+					fmt.Println("Food Details:")
+
+					for _, detail := range foodDetails {
+						fmt.Println(" -", detail)
+					}
+					
+
 				case "exit":
 					fmt.Println("Shutting down the application...")
 					return
