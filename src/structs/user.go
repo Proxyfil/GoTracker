@@ -1,32 +1,32 @@
 package suser
 
 import (
-	"math";
-	"gotracker/interface";
+	iuser "gotracker/interface"
+	"math"
 )
 
 type SUser struct {
-	ID int
-	Firstname string
-	Lastname string
-	Age int
-	Weight int
-	Height int
-	BodyFat float64
+	ID           int
+	Firstname    string
+	Lastname     string
+	Age          int
+	Weight       int
+	Height       int
 	TargetWeight int
 }
 
 // GetBodyFat returns the BodyFat value of the user
 func (u *SUser) GetBodyFat() float64 {
-    return u.BodyFat
+	// We assume a simple formula for Body Fat calculation
+	return float64(u.Weight) * 0.2
 }
 
 // GetIMC calculates and returns the IMC (Body Mass Index) of the user
 func (u *SUser) GetIMC() float64 {
-    if u.Height == 0 {
-        return 0 // Avoid division by zero
-    }
-    return float64(u.Weight) / math.Pow(float64(u.Height)/100, 2)
+	if u.Height == 0 {
+		return 0 // Avoid division by zero
+	}
+	return float64(u.Weight) / math.Pow(float64(u.Height)/100, 2)
 }
 
 // SetTargetWeight sets the target weight of the user
