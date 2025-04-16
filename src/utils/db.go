@@ -527,3 +527,70 @@ func DeleteFoodHistory(db *sql.DB, entryID int) error {
 	}
 	return nil
 }
+
+func UpdateUserFirstname(db *sql.DB, userID int, firstname string) error {
+	_, err := db.Exec(`
+		UPDATE users
+		SET firstname = $1
+		WHERE id = $2
+	`, firstname, userID)
+	if err != nil {
+		return fmt.Errorf("failed to update user firstname: %w", err)
+	}
+	return nil
+}
+func UpdateUserLastname(db *sql.DB, userID int, lastname string) error {
+	_, err := db.Exec(`
+		UPDATE users
+		SET lastname = $1
+		WHERE id = $2
+	`, lastname, userID)
+	if err != nil {
+		return fmt.Errorf("failed to update user lastname: %w", err)
+	}
+	return nil
+}
+func UpdateUserAge(db *sql.DB, userID int, age int) error {
+	_, err := db.Exec(`
+		UPDATE users
+		SET age = $1
+		WHERE id = $2
+	`, age, userID)
+	if err != nil {
+		return fmt.Errorf("failed to update user age: %w", err)
+	}
+	return nil
+}
+func UpdateUserWeight(db *sql.DB, userID int, weight int) error {
+	_, err := db.Exec(`
+		UPDATE users
+		SET weight = $1
+		WHERE id = $2
+	`, weight, userID)
+	if err != nil {
+		return fmt.Errorf("failed to update user weight: %w", err)
+	}
+	return nil
+}
+func UpdateUserHeight(db *sql.DB, userID int, height int) error {
+	_, err := db.Exec(`
+		UPDATE users
+		SET height = $1
+		WHERE id = $2
+	`, height, userID)
+	if err != nil {
+		return fmt.Errorf("failed to update user height: %w", err)
+	}
+	return nil
+}
+func UpdateUserTargetWeight(db *sql.DB, userID int, targetWeight int) error {
+	_, err := db.Exec(`
+		UPDATE users
+		SET target_weight = $1
+		WHERE id = $2
+	`, targetWeight, userID)
+	if err != nil {
+		return fmt.Errorf("failed to update user target weight: %w", err)
+	}
+	return nil
+}

@@ -50,6 +50,13 @@ func main() {
 					fmt.Println("  - report: Generate a report")
 					fmt.Println("  - register: Register a new user")
 					fmt.Println("  - login: Login as an existing user")
+					fmt.Println("  - add: Add food, meal or day")
+					fmt.Println("  - create: Create a meal or day")
+					fmt.Println("  - list: List all meals or days")
+					fmt.Println("  - link: Link food to meal or meal to day")
+					fmt.Println("  - history: View food, weight, IMC or body fat history")
+					fmt.Println("  - delete: Delete food history")
+					fmt.Println("  - update: Update user information")
 
 				case "bodyfat":
 					if(user.ID == 0){
@@ -697,6 +704,141 @@ func main() {
 							}
 						default:
 							fmt.Println("Unknown delete type. Please use 'food'.")
+					}
+
+				case "update":
+					if(user.ID == 0){
+						fmt.Println("Please login or register first.")
+						fmt.Print("Command: ")
+						continue
+					}
+					// We get arguments from the command
+					updateArgs := strings.Split(msg.Command, " ")
+					if len(updateArgs) < 2 {
+						fmt.Println("Please provide a type, can be 'firstname', 'lastname', 'age', 'weight', 'height' or 'target_weight'")
+						fmt.Print("Command: ")
+						continue
+					}
+					updateType := updateArgs[1]
+					switch updateType {
+						case "firstname":
+							if len(updateArgs) < 3 {
+								fmt.Println("Please provide a new firstname to update.")
+								fmt.Print("Command: ")
+								continue
+							}
+							newFirstname := updateArgs[2]
+							// Update the user's firstname in the database
+							err = db.UpdateUserFirstname(database, user.ID, newFirstname)
+							if err != nil {
+								fmt.Println("Error updating firstname:", err)
+								fmt.Print("Command: ")
+								continue
+							} else {
+								fmt.Printf("Firstname updated successfully to '%s'.\n", newFirstname)
+							}
+						case "lastname":
+							if len(updateArgs) < 3 {
+								fmt.Println("Please provide a new lastname to update.")
+								fmt.Print("Command: ")
+								continue
+							}
+							newLastname := updateArgs[2]
+							// Update the user's lastname in the database
+							err = db.UpdateUserLastname(database, user.ID, newLastname)
+							if err != nil {
+								fmt.Println("Error updating lastname:", err)
+								fmt.Print("Command: ")
+								continue
+							} else {
+								fmt.Printf("Lastname updated successfully to '%s'.\n", newLastname)
+							}
+						case "weight":
+							if len(updateArgs) < 3 {
+								fmt.Println("Please provide a new weight to update.")
+								fmt.Print("Command: ")
+								continue
+							}
+							newWeight, err := strconv.Atoi(updateArgs[2])
+							if err != nil {
+								fmt.Println("Error converting weight to int:", err)
+								fmt.Print("Command: ")
+								continue
+							}
+							// Update the user's weight in the database
+							err = db.UpdateUserWeight(database, user.ID, newWeight)
+							if err != nil {
+								fmt.Println("Error updating weight:", err)
+								fmt.Print("Command: ")
+								continue
+							} else {
+								fmt.Printf("Weight updated successfully to %d kg.\n", newWeight)
+							}
+						case "height":
+							if len(updateArgs) < 3 {
+								fmt.Println("Please provide a new height to update.")
+								fmt.Print("Command: ")
+								continue
+							}
+							newHeight, err := strconv.Atoi(updateArgs[2])
+							if err != nil {
+								fmt.Println("Error converting height to int:", err)
+								fmt.Print("Command: ")
+								continue
+							}
+							// Update the user's height in the database
+							err = db.UpdateUserHeight(database, user.ID, newHeight)
+							if err != nil {
+								fmt.Println("Error updating height:", err)
+								fmt.Print("Command: ")
+								continue
+							} else {
+								fmt.Printf("Height updated successfully to %d cm.\n", newHeight)
+							}
+						case "age":
+							if len(updateArgs) < 3 {
+								fmt.Println("Please provide a new age to update.")
+								fmt.Print("Command: ")
+								continue
+							}
+							newAge, err := strconv.Atoi(updateArgs[2])
+							if err != nil {
+								fmt.Println("Error converting age to int:", err)
+								fmt.Print("Command: ")
+								continue
+							}
+							// Update the user's age in the database
+							err = db.UpdateUserAge(database, user.ID, newAge)
+							if err != nil {
+								fmt.Println("Error updating age:", err)
+								fmt.Print("Command: ")
+								continue
+							} else {
+								fmt.Printf("Age updated successfully to %d years.\n", newAge)
+							}
+						case "target_weight":
+							if len(updateArgs) < 3 {
+								fmt.Println("Please provide a new target weight to update.")
+								fmt.Print("Command: ")
+								continue
+							}
+							newTargetWeight, err := strconv.Atoi(updateArgs[2])
+							if err != nil {
+								fmt.Println("Error converting target weight to int:", err)
+								fmt.Print("Command: ")
+								continue
+							}
+							// Update the user's target weight in the database
+							err = db.UpdateUserTargetWeight(database, user.ID, newTargetWeight)
+							if err != nil {
+								fmt.Println("Error updating target weight:", err)
+								fmt.Print("Command: ")
+								continue
+							} else {
+								fmt.Printf("Target weight updated successfully to %d kg.\n", newTargetWeight)
+							}
+						default:
+							fmt.Println("Unknown update type. Please use 'firstname', 'lastname', 'age', 'weight', 'height' or 'target_weight'.")
 					}
 
 				case "exit":
