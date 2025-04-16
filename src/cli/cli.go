@@ -14,9 +14,9 @@ type CommandMessage struct {
 func Open(commands chan<- CommandMessage) {
 	reader := bufio.NewReader(os.Stdin)
 
-	for {
-		fmt.Print("Command: ")
+	fmt.Print("Command: ")
 
+	for {
 		input, err := reader.ReadString('\n')
 		if err != nil {
 			fmt.Println("Error reading input:", err)
