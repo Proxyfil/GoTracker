@@ -229,3 +229,63 @@ func Migrate(db *sql.DB) error {
 
 	return nil
 }
+
+func CreateIMCHistory(db *sql.DB, userID int, date string, imc float64) error {
+	_, err := db.Exec(`
+		INSERT INTO imc_history (user_id, date, imc)
+		VALUES ($1, $2, $3)
+	`, userID, date, imc)
+	if err != nil {
+		return fmt.Errorf("failed to insert IMC history: %w", err)
+	}
+	return nil
+}
+
+func CreateBodyFatHistory(db *sql.DB, userID int, date string, bodyFat float64) error {
+	_, err := db.Exec(`
+		INSERT INTO body_fat_history (user_id, date, body_fat)
+		VALUES ($1, $2, $3)
+	`, userID, date, bodyFat)
+	if err != nil {
+		return fmt.Errorf("failed to insert body fat history: %w", err)
+	}
+	return nil
+}
+
+func CreateWeightHistory(db *sql.DB, userID int, date string, weight int) error {
+	_, err := db.Exec(`
+		INSERT INTO weight_history (user_id, date, weight)
+		VALUES ($1, $2, $3)
+	`, userID, date, weight)
+	if err != nil {
+		return fmt.Errorf("failed to insert weight history: %w", err)
+	}
+	return nil
+}
+
+func CreateUser(db *sql.DB, firstname string, lastname string, age int, weight int, height int, targetWeight int) (int, error) {
+	var userID int
+	err := db.QueryRow(`
+		INSERT INTO users (firstname, lastname, age, weight, height, target_weight)
+		VALUES ($1, $2, $3, $4, $5, $6)
+		RETURNING id
+	`, firstname, lastname, age, weight, height, targetWeight).Scan(&userID)
+	if err != nil {
+		return 0, fmt.Errorf("failed to insert user: %w", err)
+	}
+	return userID, nil
+}
+
+func GetUser(db *sql.DB, userID int) (int, string, string, int, int, int, int, error) {
+	var firstname, lastname string
+	var id, age, weight, height, targetWeight int
+	err := db.QueryRow(`
+		SELECT id, firstname, lastname, age, weight, height, target_weight
+		FROM users
+		WHERE id = $1
+	`, userID).Scan(&id, &firstname, &lastname, &age, &weight, &height, &targetWeight)
+	if err != nil {
+		return 0, "", "", 0, 0, 0, 0, fmt.Errorf("failed to get user: %w", err)
+	}
+	return id, firstname, lastname, age, weight, height, targetWeight, nil
+}

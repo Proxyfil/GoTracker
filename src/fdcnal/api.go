@@ -1,4 +1,4 @@
-package api
+package fdcnal
 
 import (
 	"encoding/json"
